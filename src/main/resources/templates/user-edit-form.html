@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Edit User</title>
+</head>
+<body>
+<h1>Edit User</h1>
+<form th:action="@{/admin/edit(id=${user.id})}" th:object="${user}" method="post">
+    <input type="hidden" th:field="*{id}" />
+
+    <label>Name:</label>
+    <input type="text" th:field="*{name}" required />
+    <br/>
+
+    <label>Last Name:</label>
+    <input type="text" th:field="*{lastName}" required />
+    <br/>
+
+    <label>Age:</label>
+    <input type="number" th:field="*{age}" required />
+    <br/>
+
+    <label>Password:</label>
+    <input type="password" name="password" required />
+    <br/>
+
+    <label>Роли:</label><br>
+    <input type="checkbox" name="roles" value="ROLE_USER"> Пользователь<br>
+    <input type="checkbox" name="roles" value="ROLE_ADMIN"> Администратор<br>
+
+    <!-- Кнопка для редактирования пользователя -->
+    <button type="submit">Update</button>
+</form>
+<a href="/admin">Back to User List</a>
+<a href="/logout">Выйти</a>
+</body>
+</html>
+//
