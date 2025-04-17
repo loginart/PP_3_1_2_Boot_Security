@@ -34,6 +34,8 @@ public class UserService implements UserDetailsService {
         this.roleRepository = roleRepository;
     }
 
+
+
     @Autowired
     public void setPasswordEncoder(PasswordEncoder passwordEncoder) {
         this.passwordEncoder = passwordEncoder;
@@ -100,11 +102,6 @@ public class UserService implements UserDetailsService {
             throw new UsernameNotFoundException(username);
         }
 
-        return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(),
-               mapRolesToAuthorities(user.getRoles()));
-    }
-        private Collection<? extends GrantedAuthority> mapRolesToAuthorities(Collection<Role> roles) {
-
-        return roles.stream().map(x -> new SimpleGrantedAuthority(x.getRole())).collect(Collectors.toList());
+        return user;
     }
 }
