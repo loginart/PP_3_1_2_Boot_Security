@@ -5,8 +5,6 @@ package ru.kata.spring.boot_security.demo.servise;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -20,7 +18,6 @@ import ru.kata.spring.boot_security.demo.repositories.UserRepository;
 
 import javax.persistence.EntityNotFoundException;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Service
 public class UserService implements UserDetailsService {
@@ -51,7 +48,7 @@ public class UserService implements UserDetailsService {
     }
 
 
-    public void addUser(User user, Set<String> roleNames) {
+    public User addUser(User user, Set<String> roleNames) {
         Set<Role> roles = new HashSet<>();
         for (String roleName : roleNames) {
             Role role = roleRepository.findByRole(roleName);
@@ -62,7 +59,7 @@ public class UserService implements UserDetailsService {
         user.setRoles(roles);
 
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        userRepository.save(user);
+       return userRepository.save(user);
     }
 
     public List<User> getAllUser() {
@@ -72,6 +69,7 @@ public class UserService implements UserDetailsService {
 
     public void deleteUser(Long userId) {
         userRepository.deleteById(userId);
+
     }
 
 

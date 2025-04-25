@@ -29,7 +29,6 @@
 <div class="sidebar">
     <h2>Меню</h2>
     <ul class="nav flex-column">
-        <!-- Отображение ссылок в зависимости от ролей -->
         <li class="nav-item" th:if="${roles.contains('ROLE_ADMIN')}">
             <a class="nav-link text-white" href="/admin">Администратор</a>
         </li>
@@ -99,74 +98,53 @@
                         <th>Удалить</th>
                     </tr>
                     </thead>
-                    <tbody>
-                    <tr th:each="user1 : ${users}">
-                        <td th:text="${user1.id}"></td>
-                        <td th:text="${user1.name}"></td>
-                        <td th:text="${user1.lastName}"></td>
-                        <td th:text="${user1.age}"></td>
-                        <td th:text="${user1.roles}"></td>
-                        <td>
-                            <button type="button" class="btn btn-warning btn-sm" data-toggle="modal" data-target="#editUserModal"
-                                    th:data-user-id="${user1.id}"
-                                    th:data-user-name="${user1.name}"
-                                    th:data-user-lastname="${user1.lastName}"
-                                    th:data-user-age="${user1.age}"
-                                    th:data-user-roles="${user1.roles}">
-                                Редактировать
-                            </button>
-
-                        </td>
-
-                        <td>
-                            <form th:action="@{/admin/delete(id=${user1.id})}" method="post" style="display:inline;">
-                                <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Вы уверены, что хотите удалить этого пользователя?');">Удалить</button>
-                            </form>
-                        </td>
-                        <div class="modal fade" id="editUserModal" tabindex="-1" role="dialog" aria-labelledby="editUserModalLabel" aria-hidden="true">
-                            <div class="modal-dialog" role="document">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h5 class="modal-title" id="editUserModalLabel">Редактировать пользователя</h5>
-                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                            <span aria-hidden="true">&times;</span>
-                                        </button>
-                                    </div>
-                                    <div class="modal-body">
-                                        <form th:action="@{/admin/edit(id=${user1.id})}" method="post" id="editUserForm">
-                                            <input type="hidden" id="editUserId" name="id" />
-                                            <div class="form-group">
-                                                <label for="editUserName">Имя</label>
-                                                <input type="text" class="form-control" id="editUserName" name="name" required />
-                                            </div>
-                                            <div class="form-group">
-                                                <label for="editUserLastName">Фамилия</label>
-                                                <input type="text" class="form-control" id="editUserLastName" name="lastName" required />
-                                            </div>
-                                            <div class="form-group">
-                                                <label for="editUserAge">Возраст</label>
-                                                <input type="number" class="form-control" id="editUserAge" name="age" required />
-                                            </div>
-                                            <div class="form-group">
-                                                <label for="editUserPassword">Пароль</label>
-                                                <input type="text" class="form-control" id="editUserPassword" name="password" required />
-                                            </div>
-                                            <div class="form-group">
-                                                <label for="editUserRoles">Роли</label>
-                                                <select multiple class="form-control" id="editUserRoles" name="roles">
-                                                    <option value="ROLE_USER">Пользователь</option>
-                                                    <option value="ROLE_ADMIN">Администратор</option>
-                                                </select>
-                                            </div>
-                                            <button type="submit" class="btn btn-primary">Обновить пользователя</button>
-                                        </form>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </tr>
+                    <tbody id="userTableBody">
+                    <!-- Данные будут загружены здесь с помощью JavaScript -->
                     </tbody>
                 </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Модальное окно редактирования пользователя -->
+<div class="modal fade" id="editUserModal" tabindex="-1" role="dialog" aria-labelledby="editUserModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editUserModalLabel">Редактировать пользователя</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="editUserForm">
+                    <input type="hidden" id="editUserId" name="id" />
+                    <div class="form-group">
+                        <label for="editUserName">Имя</label>
+                        <input type="text" class="form-control" id="editUserName" name="name" required />
+                    </div>
+                    <div class="form-group">
+                        <label for="editUserLastName">Фамилия</label>
+                        <input type="text" class="form-control" id="editUserLastName" name="lastName" required />
+                    </div>
+                    <div class="form-group">
+                        <label for="editUserAge">Возраст</label>
+                        <input type="number" class="form-control" id="editUserAge" name="age" required />
+                    </div>
+                    <div class="form-group">
+                        <label for="editUserPassword">Пароль</label>
+                        <input type="text" class="form-control" id="editUserPassword" name="password" required />
+                    </div>
+                    <div class="form-group">
+                        <label for="editUserRoles">Роли</label>
+                        <select multiple class="form-control" id="editUserRoles" name="roles">
+                            <option value="ROLE_USER">Пользователь</option>
+                            <option value="ROLE_ADMIN">Администратор</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Обновить пользователя</button>
+                </form>
             </div>
         </div>
     </div>
@@ -175,36 +153,6 @@
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-<script>
-    // Обработчик события для открытия модального окна редактирования пользователя
-    $('#editUserModal').on('show.bs.modal', function (event) {
-        var button = $(event.relatedTarget); // Кнопка, которая открыла модальное окно
-        var userId = button.data('user-id'); // Получаем ID пользователя
-        var userName = button.data('user-name'); // Получаем имя пользователя
-        var userLastName = button.data('user-lastname'); // Получаем фамилию пользователя
-        var userAge = button.data('user-age');
-        var userPassword = button.data('user-password');// Получаем возраст пользователя
-        var userRoles = button.data('user-roles'); // Получаем роли пользователя
-
-        // Заполняем поля формы
-        var modal = $(this);
-        modal.find('#editUserId').val(userId);
-        modal.find('#editUserName').val(userName);
-        modal.find('#editUserLastName').val(userLastName);
-        modal.find('#editUserAge').val(userAge);
-        modal.find('#editUserPassword').val(userPassword);
-        modal.find('#editUserRoles').val(userRoles);
-
-        // Устанавливаем выбранные роли
-        // var rolesArray = userRoles.split(','); // Предполагаем, что роли разделены запятой
-        // $('#editUserRoles option').each(function() {
-        //     if (rolesArray.includes($(this).val())) {
-        //         $(this).prop('selected', true);
-        //     } else {
-        //         $(this).prop('selected', false);
-        //     }
-        // });
-    });
-</script>
+<script src="javascript.js"></script> <!-- Подключение внешнего JavaScript файла -->
 </body>
 </html>
