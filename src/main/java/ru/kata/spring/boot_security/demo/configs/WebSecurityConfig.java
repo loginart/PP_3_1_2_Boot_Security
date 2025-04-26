@@ -3,6 +3,7 @@ package ru.kata.spring.boot_security.demo.configs;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -31,10 +32,14 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http
-                .csrf().disable()
+        http.csrf().disable()
+
                 .authorizeRequests()
-                .antMatchers("/", "/index").permitAll()
+//                .antMatchers(HttpMethod.GET, "api/users/**").authenticated()
+//                .antMatchers(HttpMethod.POST, "api/users/**").hasRole("ADMIN")
+//                .antMatchers(HttpMethod.PUT, "api/users/**").hasRole("ADMIN")
+//                .antMatchers(HttpMethod.DELETE, "api/users/**").authenticated()
+                .antMatchers("/", "/index", "/javascript.js").permitAll()
                 .antMatchers("/admin/**").hasRole("ADMIN")
                 .antMatchers("/user/**").hasRole("USER")
                 .anyRequest().authenticated()

@@ -73,20 +73,32 @@ public class UserService implements UserDetailsService {
     }
 
 
-    public void updateUser(Long id, User updatedUser) {
-        User user  = userRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("User  not found with ID: " + id));
+    public User updateUser(Long id, User updatedUser, Set<String> roleNames) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("User not found with ID: " + id));
 
-        user.setName(updatedUser .getName());
-        user.setAge(updatedUser .getAge());
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        // Обновляем роли
+        Set<Role> roles = new HashSet<>();
+        for (String roleName : roleNames) {
+            Role role = roleRepository.findByRole(roleName);
+            if (role != null) {
+                roles.add(role);
+            }
+        }
+        user.setRoles(roles);
+
+        // Обновляем основные данные
+        user.setName(updatedUser.getName());
         user.setLastName(updatedUser.getLastName());
+        user.setAge(updatedUser.getAge());
 
+        // Обновляем пароль только если он был изменен
+        if (updatedUser.getPassword() != null && !updatedUser.getPassword().isEmpty()) {
+            user.setPassword(passwordEncoder.encode(updatedUser.getPassword()));
+        }
 
-         userRepository.save(user);
+        return userRepository.save(user);
     }
-
-
     public User getUser(Long id) {
         Optional<User> optionalUser  = userRepository.findById(id);
 

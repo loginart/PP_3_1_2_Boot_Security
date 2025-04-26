@@ -40,9 +40,13 @@ public class UserRestController {
         return ResponseEntity.status(HttpStatus.CREATED).body(createdUser);
     }
     @PutMapping("/{id}")
-    public ResponseEntity<User> updateUser(@PathVariable Long id, @RequestBody User user) {
-        userService.updateUser(id,user);
-        return ResponseEntity.ok(user);
+    public ResponseEntity<User> updateUser(
+            @PathVariable Long id,
+            @RequestBody User user,
+            @RequestParam Set<String> roles) {
+
+        User updatedUser = userService.updateUser(id, user, roles);
+        return ResponseEntity.ok(updatedUser);
     }
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteUser(@PathVariable Long id) {

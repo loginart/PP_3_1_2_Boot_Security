@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
 import ru.kata.spring.boot_security.demo.model.Role;
 import ru.kata.spring.boot_security.demo.model.User;
 import ru.kata.spring.boot_security.demo.servise.UserService;
@@ -20,7 +19,7 @@ import ru.kata.spring.boot_security.demo.servise.UserService;
 
 import java.util.*;
 import java.util.stream.Collectors;
-@RestController
+
 @Controller
 @RequestMapping("/admin")
 public class AdminController {
@@ -32,11 +31,6 @@ public class AdminController {
         this.userService = userService;
     }
 
-//    @GetMapping
-//    public String listUsers(Model model) {
-//        model.addAttribute("users", userService.getAllUser());
-//        return "admin-list";
-//    }
 
     @GetMapping
     public String showAddForm(Model model, @AuthenticationPrincipal User user) {
@@ -73,9 +67,9 @@ public class AdminController {
 
     @PostMapping("/edit")
     public String editUser(@RequestParam(value = "id", required = false) Long id, @RequestParam(value = "name") String name, @RequestParam(value = "lastName")
-    String lastName, @RequestParam(value = "age") Integer age, @RequestParam(value = "password") String password) {
+    String lastName, @RequestParam(value = "age") Integer age, @RequestParam(value = "password") String password,@RequestParam(value = "roles")Set<String> roles) {
         User user = new User(name, lastName, age, password);
-        userService.updateUser(id, user);
+        userService.updateUser(id, user,roles);
         return "redirect:/admin";
     }
 
