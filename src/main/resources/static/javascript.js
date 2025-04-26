@@ -44,13 +44,40 @@ $(document).ready(function() {
                 </td>
                 <td>
                     <form action="/admin/delete?id=${user.id}" method="post" style="display:inline;">
-                        <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Вы уверены, что хотите удалить этого пользователя?');">Удалить</button>
+                        <button type="button" class="btn btn-danger btn-sm delete-user" data-user-id="${user.id}">
+                Удалить
+            </button>
                     </form>
                 </td>
             </tr>
         `;
             tableBody.append(row);
         });
+    }
+
+    $(document).on('click', '.delete-user', function() {
+        const userId = $(this).data('user-id');
+        if (confirm('Вы уверены, что хотите удалить этого пользователя?')) {
+            deleteUser(userId);
+        }
+    });
+
+    // Функция для удаления пользователя
+    function deleteUser(userId) {
+        fetch(`/admin/delete?id=${userId}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            }
+        })
+            .then(response => {
+                if (response.ok) {
+                    loadUsers(); // Перезагружаем список пользователей после удаления
+                } else {
+                    console.error('Ошибка при удалении пользователя');
+                }
+            })
+            .catch(error => console.error('Ошибка:', error));
     }
 
     // Открытие модального окна редактирования пользователя
